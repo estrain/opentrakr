@@ -6,3 +6,5 @@ A set of Python tools for working with microbial genomic data.
 - Retrieve metadata and clustering results for microbial pathogens
 
 ## Installion
+
+## Usage
