@@ -2,8 +2,19 @@
 requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-# 
+[project]
+name = "opentrakr"
+version = "0.1.0"
+description = "A collection of functions for WGS analysis of pathogen data."
+readme = "README.md"
+license = { text = "MIT License" }
+authors = [{ name = "Errol Strain", email = "estrain@gmail.com" }]
+dependencies = ["requests"]
+requires-python = ">=3.6"
+
+[project.urls]
+homepage = "https://github.com/estrain/opentrakr"
+repository = "https://github.com/estrain/opentrakr"
 
 [tool.setuptools.packages.find]
 where = ["."]
