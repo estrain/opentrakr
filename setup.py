@@ -13,7 +13,7 @@ setup(
     py_modules=["ncbi_tsv_download"],
     entry_points={
         'console_scripts': [
-            'opentrakr=ncbi_tsv_download:main',
+            'ncbi_tsv_download=ncbi_tsv_download:main',
         ],
     },
     install_requires=[
