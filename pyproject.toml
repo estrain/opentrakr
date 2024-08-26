@@ -16,5 +16,8 @@ requires-python = ">=3.6"
 homepage = "https://github.com/estrain/opentrakr"
 repository = "https://github.com/estrain/opentrakr"
 
+[project.scripts]
+ncbi_tsv_download = "opentrakr.ncbi_tsv_download:main"
+
 [tool.setuptools.packages.find]
 where = ["."]

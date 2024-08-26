@@ -1,0 +1,23 @@
+Metadata-Version: 2.1
+Name: opentrakr
+Version: 0.1.0
+Summary: A collection of functions for WGS analysis of pathogen data.
+Author-email: Errol Strain <estrain@gmail.com>
+License: MIT License
+Project-URL: homepage, https://github.com/estrain/opentrakr
+Project-URL: repository, https://github.com/estrain/opentrakr
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: requests
+
+# opentrakr
+
+A set of Python tools for working with microbial genomic data.
+
+## Features
+- Retrieve metadata and clustering results for microbial pathogens
+
+## Installion
+
+## Usage

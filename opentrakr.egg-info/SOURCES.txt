@@ -1,0 +1,12 @@
+LICENSE
+MANIFEST.in
+README.md
+pyproject.toml
+setup.py
+opentrakr/ncbi_tsv_download.py
+opentrakr.egg-info/PKG-INFO
+opentrakr.egg-info/SOURCES.txt
+opentrakr.egg-info/dependency_links.txt
+opentrakr.egg-info/entry_points.txt
+opentrakr.egg-info/requires.txt
+opentrakr.egg-info/top_level.txt
