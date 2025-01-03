@@ -1,4 +1,23 @@
-# Ignore build artifacts
-build/
-dist/
+# OS-specific files
+.DS_Store
+
+# Virtual environment
+.venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Package files
 *.egg-info/
+dist/
+build/
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Data directory (contains generated data)
+data/
