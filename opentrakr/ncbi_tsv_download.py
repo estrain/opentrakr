@@ -40,13 +40,12 @@ def download_cluster_tsv_files(base_url, target_directory):
     - base_url: The URL of the subdirectory containing the *.tsv files.
     - target_directory: The local directory to save the downloaded files.
     """
-    response = requests.get(base_url)
+    response = requests.get(base_url, timeout=10)
     if response.status_code != 200:
         print(f"Failed to access {base_url}")
         return
 
-    # Use a regular expression to find all .tsv file links
-    file_links = re.findall(r'href="([^"]+\.tsv)"', response.text)
+    file_links = re.findall(r'href="((?![^"]*SNP_distances)[^"]+\.tsv)"', response.text)
 
     for href in file_links:
         download_url = f"{base_url}/{href}"
