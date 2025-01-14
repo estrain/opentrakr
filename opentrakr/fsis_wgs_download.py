@@ -324,6 +324,6 @@ if __name__ == "__main__":
     elif args.operation == "join":
         primary_file = os.path.join(args.output_folder, "merged_usda_fsis_data_primary.csv")
         secondary_file = os.path.join(args.output_folder, "merged_usda_fsis_data_secondary.csv")
-        join_primary_secondary(primary_file, secondary_file, args.output_folder)
+        join_primary_secondary(primary_file, secondary_file, args.output_folder, args.output_file)
     elif args.operation == "complete_workflow":
         complete_workflow(args.download_method, args.output_folder, args.output_file, args.geckodriver_path)
