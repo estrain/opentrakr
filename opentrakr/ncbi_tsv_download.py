@@ -13,6 +13,9 @@ def download_tsv_files(base_url, target_directory):
     - base_url: The URL of the subdirectory containing the *.tsv files.
     - target_directory: The local directory to save the downloaded files.
     """
+    # Ensure the target directory exists
+    os.makedirs(target_directory, exist_ok=True)
+
     response = requests.get(base_url)
     if response.status_code != 200:
         print(f"Failed to access {base_url}")
@@ -40,6 +43,9 @@ def download_cluster_tsv_files(base_url, target_directory):
     - base_url: The URL of the subdirectory containing the *.tsv files.
     - target_directory: The local directory to save the downloaded files.
     """
+    # Ensure the target directory exists
+    os.makedirs(target_directory, exist_ok=True)
+
     response = requests.get(base_url, timeout=10)
     if response.status_code != 200:
         print(f"Failed to access {base_url}")
@@ -64,11 +70,11 @@ def list_available_bacteria():
 def main():
     bacteria_list = list_available_bacteria()
     base_url = 'https://ftp.ncbi.nlm.nih.gov/pathogen/Results'
-    target_directory = '.'
 
     parser = argparse.ArgumentParser(description='Download TSV files from the NCBI FTP site.')
     parser.add_argument('-b', '--bacteria', type=str, help='Name of the bacteria to process. If not provided, all bacteria will be processed.')
     parser.add_argument('-l', '--list', action='store_true', help='List available bacteria and exit.')
+    parser.add_argument('-t', '--output_folder', type=str, default='metadata_ncbi', help='Target directory to save the downloaded files. Defaults to metadata_ncbi.')
     args = parser.parse_args()
 
     if args.list:
@@ -76,6 +82,8 @@ def main():
         for bacteria in bacteria_list:
             print(f"- {bacteria}")
         return
+
+    target_directory = args.output_folder
 
     if args.bacteria:
         if args.bacteria not in bacteria_list:

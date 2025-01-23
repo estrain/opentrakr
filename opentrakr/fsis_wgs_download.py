@@ -5,6 +5,7 @@ import pandas as pd
 import argparse
 import subprocess
 import glob
+import requests
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.options import Options
@@ -23,6 +24,27 @@ file_names = [
     "raw_poultry_sampling_data_fy2015.zip",
     "raw_poultry_sampling_data_fy2014.zip",
 ]
+
+def download_files_requests(output_folder):
+    base_url = "https://www.fsis.usda.gov/sites/default/files/media_file/documents/"
+    os.makedirs(output_folder, exist_ok=True)
+
+    for file_name in file_names:
+        file_url = f"{base_url}{file_name}"
+        output_path = os.path.join(output_folder, file_name)
+        print(f"Downloading {file_url} to {output_path}")
+        try:
+            response = requests.get(file_url, stream=True)
+            response.raise_for_status()
+            with open(output_path, "wb") as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+            print(f"{file_name} downloaded successfully.")
+            # Unzip the file
+            subprocess.run(["unzip", "-o", output_path, "-d", output_folder])
+        except requests.RequestException as e:
+            print(f"Failed to download {file_name}: {e}")
+
 
 # Function to download files using Firefox
 def download_files_firefox(output_folder, geckodriver_path=None):
@@ -72,25 +94,6 @@ def download_files_firefox(output_folder, geckodriver_path=None):
         if driver:
             driver.quit()
         print("WebDriver session closed.")
-
-
-
-# Function to download files using curl
-def download_files_curl(output_folder):
-    base_url = "https://www.fsis.usda.gov/sites/default/files/media_file/documents/"
-    os.makedirs(output_folder, exist_ok=True)
-
-    for file_name in file_names:
-        file_url = f"{base_url}{file_name}"
-        output_path = os.path.join(output_folder, file_name)
-        print(f"Downloading {file_url} to {output_path}")
-        try:
-            subprocess.run(["curl", "-o", output_path, file_url], check=True)
-            print(f"{file_name} downloaded successfully.")
-            # Unzip the file
-            subprocess.run(["unzip", "-o", output_path, "-d", output_folder])
-        except subprocess.CalledProcessError as e:
-            print(f"Failed to download {file_name}: {e}")
 
 def process_json_files(folder_path):
     if not os.path.exists(folder_path):
@@ -271,8 +274,10 @@ def join_primary_secondary(primary_file, secondary_file, output_folder, output_f
 def complete_workflow(download_method, output_folder, joined_file, geckodriver_path):
     if download_method == "firefox":
         download_files_firefox(output_folder, geckodriver_path)
-    else:
+    elif download_method == "curl":
         download_files_curl(output_folder)
+    elif download_method == "requests":
+        download_files_requests(output_folder)
 
     process_json_files(output_folder)
     merge_csv_files_by_type(output_folder)
@@ -282,7 +287,7 @@ def complete_workflow(download_method, output_folder, joined_file, geckodriver_p
 
     join_primary_secondary(primary_file, secondary_file, output_folder, joined_file)
 
-# Main function
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Download, process, merge, join FSIS data, or run the complete workflow."
@@ -291,23 +296,23 @@ if __name__ == "__main__":
         "operation",
         choices=[
             "download_firefox",
-            "download_curl",
+            "download_requests",
             "process",
             "merge",
             "join",
             "complete_workflow",
         ],
-        help="Operation to perform: 'download_firefox', 'download_curl', 'process', 'merge', 'join', or 'complete_workflow'.",
+        help="Operation to perform: 'download_firefox', 'download_curl', 'download_requests', 'process', 'merge', 'join', or 'complete_workflow'.",
     )
     parser.add_argument("--output_file", default="fsis_wgs.csv", help="Output file for joined data.")
     parser.add_argument(
-        "--output_folder", default="fsis_output", help="Folder for downloading and processing files."
+        "--output_folder", default="metadata_fsis", help="Folder for downloading and processing files."
     )
     parser.add_argument(
         "--download_method",
-        choices=["curl", "firefox"],
-        default="curl",
-        help="Method to use for downloading files (default: curl).",
+        choices=[ "firefox", "requests"],
+        default="requests",
+        help="Method to use for downloading files (default: requests).",
     )
     parser.add_argument("--geckodriver_path", default="geckodriver", help="Path to the geckodriver executable.")
 
@@ -315,8 +320,8 @@ if __name__ == "__main__":
 
     if args.operation == "download_firefox":
         download_files_firefox(args.output_folder, args.geckodriver_path)
-    elif args.operation == "download_curl":
-        download_files_curl(args.output_folder)
+    elif args.operation == "download_requests":
+        download_files_requests(args.output_folder)
     elif args.operation == "process":
         process_json_files(args.output_folder)
     elif args.operation == "merge":
