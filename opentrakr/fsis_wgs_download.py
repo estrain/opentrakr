@@ -274,8 +274,6 @@ def join_primary_secondary(primary_file, secondary_file, output_folder, output_f
 def complete_workflow(download_method, output_folder, joined_file, geckodriver_path):
     if download_method == "firefox":
         download_files_firefox(output_folder, geckodriver_path)
-    elif download_method == "curl":
-        download_files_curl(output_folder)
     elif download_method == "requests":
         download_files_requests(output_folder)
 
@@ -302,7 +300,7 @@ if __name__ == "__main__":
             "join",
             "complete_workflow",
         ],
-        help="Operation to perform: 'download_firefox', 'download_curl', 'download_requests', 'process', 'merge', 'join', or 'complete_workflow'.",
+        help="Operation to perform: 'download_firefox', 'download_requests', 'process', 'merge', 'join', or 'complete_workflow'.",
     )
     parser.add_argument("--output_file", default="fsis_wgs.csv", help="Output file for joined data.")
     parser.add_argument(
